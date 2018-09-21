@@ -5,16 +5,8 @@
     box-shadow: 0 5px 10px 0 rgba(0, 0, 0, .06);
     border: 1px solid #e0e0e0;
     background-color: #fff;
-    display: none;
-    pointer-events: none;
- }
-
-.root.is-shown {
     display: block;
-}
-
-.root.is-hidden {
-    display: none;
+    pointer-events: none;
 }
 
 .root::before,
@@ -54,5 +46,5 @@
 
 .root.is-center::before,
 .root.is-center::after {
-    left: calc(50% - 5px);
+    left: calc(50% - 10px);
 }
