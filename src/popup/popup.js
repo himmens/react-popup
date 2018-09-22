@@ -1,7 +1,7 @@
 // @flow
 import React, { PureComponent, type Node, type ComponentType } from 'react';
 import ReactDOM from 'react-dom';
-import styles from './tooltip.css';
+import styles from './popup.css';
 import classnames from 'classnames';
 
 // container for rendering popup in portal
@@ -9,7 +9,8 @@ const parent: HTMLElement = document.createElement('div');
 
 type Props = {|
     targetRect: ?ClientRect,
-    children: ?Node
+    children: ?Node,
+    onClose: () => void
 |};
 
 type State = {|
@@ -17,20 +18,22 @@ type State = {|
     height: number,
 |};
 
-export default class Tooltip extends PureComponent<Props, State> {
+export default class Popup extends PureComponent<Props, State> {
     state = {
         width: 0,
         height: 0
     };
-    tooltip: ?HTMLElement;
+    popup: ?HTMLElement;
 
     componentDidMount() {
+        document.addEventListener('mousedown', this.handleDocumentMouseDown);
+        window.addEventListener('resize', this.handleResize);
         if (document.body) {
             document.body.appendChild(parent);
         }
-        if (this.tooltip) {
-            const width: number = this.tooltip.offsetWidth;
-            const height: number = this.tooltip.offsetHeight;
+        if (this.popup) {
+            const width: number = this.popup.offsetWidth;
+            const height: number = this.popup.offsetHeight;
             if (this.state.width !== width || this.state.height !== height) {
                 this.setState({ width, height });
             }
@@ -38,6 +41,8 @@ export default class Tooltip extends PureComponent<Props, State> {
     }
 
     componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleDocumentMouseDown);
+        window.removeEventListener('resize', this.handleResize);
         if (document.body) {
             document.body.removeChild(parent);
         }
@@ -76,8 +81,9 @@ export default class Tooltip extends PureComponent<Props, State> {
 
         return ReactDOM.createPortal(
             (
-                <div ref={this.ref} className={classes} style={{ left: `${left}px`, top: `${top}px` }}>
+                <div ref={this.ref} className={classes} style={{ left: `${left}px`, top: `${top}px` }} onMouseDown={this.handleMouseDown} onClick={this.handleClick}>
                     {children}
+                    <span className={styles.close} title='Close' onClick={this.handleClose} />
                 </div>
             ),
             parent
@@ -85,6 +91,33 @@ export default class Tooltip extends PureComponent<Props, State> {
     }
 
     ref = (element: ?HTMLElement) => {
-        this.tooltip = element;
+        this.popup = element;
+    }
+
+    close() {
+        this.props.onClose();
+    }
+
+    handleClose = () => {
+        this.close();
+    }
+
+    handleMouseDown = (event: Event) => {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    handleClick = (event: Event) => {
+        event.stopPropagation();
+    }
+
+    handleDocumentMouseDown = (event: Event) => {
+        if (!event.defaultPrevented) {
+            this.close();
+        }
+    }
+
+    handleResize = () => {
+        this.close();
     }
 }

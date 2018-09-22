@@ -1,6 +1,8 @@
 const path = require('path');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 
+const source = ['src'];
+
 module.exports = {
     mode: 'development',
     devtool: 'inline-source-map',
@@ -42,7 +44,7 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                include: ['src'],
+                include: source,
                 use: [
                     'style-loader',
                     {
@@ -66,14 +68,14 @@ module.exports = {
                     }
                 ]
             },
-            // {
-            //     test: /\.(png|jpg|gif|svg|woff|woff2)$/,
-            //     include: source,
-            //     loader: 'url-loader',
-            //     options: {
-            //         limit: 100000
-            //     }
-            // }
+            {
+                test: /\.svg$/,
+                // include: source,
+                loader: 'url-loader',
+                options: {
+                    limit: 100000
+                }
+            },
             // {
             //     test: /\.html$/,
             //     use: [

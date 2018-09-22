@@ -1,0 +1,63 @@
+.root {
+    position: absolute;
+    padding: 10px;
+    z-index: 99;
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, .06);
+    border: 1px solid #e0e0e0;
+    background-color: #fff;
+    display: block;
+}
+
+.root::before,
+.root::after {
+    position: absolute;
+    height: 0;
+    width: 0;
+    content: ' ';
+}
+
+.root::before {
+    bottom: -11px;
+    border-left: 11px solid transparent;
+    border-right: 11px solid transparent;
+    border-top: 11px solid #e0e0e0;
+    margin-left: -1px;
+    margin-right: -1px;
+}
+
+.root::after {
+    bottom: -10px;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid #fff;
+}
+
+.root.is-left::before,
+.root.is-left::after {
+    left: 10px;
+}
+
+.root.is-right::before,
+.root.is-right::after {
+    right: 10px;
+}
+
+.root.is-center::before,
+.root.is-center::after {
+    left: calc(50% - 10px);
+}
+
+.close {
+    background: transparent no-repeat center;
+    background-image: url('./resources/close.svg');
+    background-size: contain;
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    padding: 0;
+    width: 16px;
+    height: 16px;
+    border: 0;
+    cursor: pointer;
+    outline: none;
+}

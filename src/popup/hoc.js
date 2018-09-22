@@ -1,13 +1,13 @@
 // @flow
 import React, { Fragment, PureComponent, type Node, type ComponentType } from 'react';
-import Tooltip from './tooltip';
+import Popup from './popup';
 
 type State = {|
     hidden: boolean,
     targetRect: ?ClientRect
 |};
 
-export default function TooltipHOC<Props>(Component: ComponentType<Props>): ComponentType<$Diff<Props, { children: Node }>> {
+export default function PopupHOC<Props>(Component: ComponentType<Props>): ComponentType<$Diff<Props, { children: Node }>> {
     return class WrappedComponent extends PureComponent<*, State> {
         state = {
             hidden: true,
@@ -17,13 +17,13 @@ export default function TooltipHOC<Props>(Component: ComponentType<Props>): Comp
         render(): Node {
             return (
                 <Fragment>
-                    <Component {...this.props} onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut} />
-                    {this.renderTooltip()}
+                    <Component {...this.props} onClick={this.handleClick} />
+                    {this.renderPopup()}
                 </Fragment>
             );
         }
 
-        renderTooltip(): Node {
+        renderPopup(): Node {
             const { children } = this.props;
             const { hidden, targetRect } = this.state;
 
@@ -32,20 +32,20 @@ export default function TooltipHOC<Props>(Component: ComponentType<Props>): Comp
             }
 
             return (
-                <Tooltip targetRect={targetRect}>
+                <Popup targetRect={targetRect} onClose={this.handleClose}>
                     {children}
-                </Tooltip>
+                </Popup>
             );
         }
 
-        handleMouseOver = (event: SyntheticEvent<HTMLElement>) => {
+        handleClick = (event: SyntheticEvent<HTMLElement>) => {
             const target: HTMLElement = event.currentTarget;
             const targetRect: ClientRect = target.getBoundingClientRect();
             this.setState({ hidden: false, targetRect });
         }
 
-        handleMouseOut = () => {
+        handleClose = () => {
             this.setState({ hidden: true });
-        }
+        };
     };
 }

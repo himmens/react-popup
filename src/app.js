@@ -1,6 +1,7 @@
 // @flow
 import React, { type Node } from 'react';
 import TooltipHOC from './tooltip/hoc';
+import PopupHOC from './popup/hoc';
 import styles from './app.css';
 
 export default function App(): Node {
@@ -15,12 +16,12 @@ export default function App(): Node {
                 ids.map(id => {
                     const left: number = Math.random() * (window.innerWidth - 20);
                     const top: number = Math.random() * (window.innerHeight - 20);
-                    const padding: number = 10 + Math.random() * 100;
+                    const margin: number = 10 + Math.random() * 100;
 
                     return (
-                        <TooltipComponent key={id} id={id} style={{ left: `${left}px`, top: `${top}px`}}>
-                            <span style={{ padding: `${padding}px` }}>{`Tooltip${id}`}</span>
-                        </TooltipComponent>
+                        <PopupComponent key={id} id={id} style={{ left: `${left}px`, top: `${top}px`}}>
+                            <span style={{ display: 'block', margin: `${margin}px` }}>{`Tooltip${id}`}</span>
+                        </PopupComponent>
                     );
                 })
             }
@@ -41,3 +42,4 @@ function Component(props: ComponentProps): Node {
 }
 
 const TooltipComponent = TooltipHOC(Component);
+const PopupComponent = PopupHOC(Component);
